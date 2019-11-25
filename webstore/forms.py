@@ -1,5 +1,5 @@
 from flask_wtf  import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField
+from wtforms import StringField, PasswordField, SubmitField, IntegerField
 from wtforms.validators import DataRequired, Length, EqualTo, ValidationError
 from webstore.models import Customer
 
@@ -27,6 +27,16 @@ class RegistrationForm(FlaskForm):
 class CustomerLoginForm(FlaskForm):
     username = StringField('Username', 
                             validators=[DataRequired(), Length(min=2, max=20)])
-    password = PasswordField('password', validators=[DataRequired()])
+    password = PasswordField('Password', validators=[DataRequired()])
 
     submit = SubmitField('Login')
+
+class CreditCardForm(FlaskForm):
+    
+    cardnumber = StringField('Credit Card Number', validators=[DataRequired(), Length(min=16,max=16)])
+    state = StringField('State', validators=[DataRequired(), Length(min=2,max=4)])
+    zipcode = IntegerField('Zip Code', validators=[DataRequired()])
+    city = StringField('City', validators=[DataRequired(),Length(min=2,max=20)])
+    street = StringField('Street', validators=[DataRequired(), Length(min=2,max=20)])
+    submit = SubmitField('Add Card')
+    

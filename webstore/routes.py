@@ -1,7 +1,7 @@
 from flask import render_template, url_for, flash, redirect
 from webstore import app, db
-from webstore.forms import RegistrationForm, CustomerLoginForm
-from webstore.models import Customer, Product, Food, Alcohol, Warehouse
+from webstore.forms import RegistrationForm, CustomerLoginForm, CreditCardForm
+from webstore.models import Customer, Product, Food, Alcohol, Warehouse, CreditCard
 from flask_login import login_user, current_user, logout_user
 
 
@@ -58,7 +58,15 @@ def logout():
     return redirect(url_for('home'))
 
 
-@app.route("/account")
+@app.route("/account", methods = ['GET', 'POST'])
 def account():
-    return render_template('account.html', title='Account')
-    
+    form = CreditCardForm()
+    if form.validate_on_submit():
+        creditcard = CreditCard(state=form.state.data,zipcode = form.zipcode.data, street = form.street.data,
+                                city = form.city.data, cardnumber = form.cardnumber.data, c_id = (current_user.get_id()))
+        db.session.add(creditcard)
+        db.session.commit()
+        flash(f'Credit Card added', 'success')
+        return redirect(url_for('shop'))
+    return render_template('account.html', title='Account', form=form)
+

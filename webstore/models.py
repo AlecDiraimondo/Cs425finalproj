@@ -25,7 +25,7 @@ class CreditCard(db.Model):
     zipcode = db.Column(db.String(20), nullable = False)
     street = db.Column(db.String(40), nullable = False)
     city = db.Column(db.String(20), nullable = False)
-    cardnumber = db.Column(db.BigInteger, nullable = False, primary_key=True)
+    cardnumber = db.Column(db.String(16), nullable = False, primary_key=True)
     c_id = db.Column(db.Integer, db.ForeignKey('Customer.c_id'))
 
 class Product(db.Model):
@@ -46,7 +46,7 @@ class Order(db.Model):
     __tablename__ = 'Order'
     order_id = db.Column(db.Integer, primary_key = True, unique = True)
     subtotal = db.Column(db.Numeric(8,2), nullable=False)
-    card_number = db.Column(db.BigInteger, nullable=False)
+    card_number = db.Column(db.String(16), nullable=False)
     time_ordered = db.Column(db.DateTime, nullable = False, default = datetime.utcnow)
     status = db.Column(db.String(20), nullable = False)
 
