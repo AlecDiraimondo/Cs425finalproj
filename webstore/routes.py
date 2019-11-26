@@ -1,7 +1,7 @@
 from flask import render_template, url_for, flash, redirect, request
 from webstore import app, db
 from webstore.forms import RegistrationForm, CustomerLoginForm, CreditCardForm, AddressForm, CheckoutForm
-from webstore.models import Customer, Product, Food, Alcohol, Warehouse, CreditCard, ShoppingCart, Shipping_Address
+from webstore.models import Customer, Product, Food, Alcohol, Warehouse, CreditCard, ShoppingCart, Shipping_Address, Cost, Order
 from flask_login import login_user, current_user, logout_user
 
 
@@ -98,10 +98,33 @@ def checkout():
     form = CheckoutForm()
     address = Shipping_Address.query.filter_by(customer_id=current_user.get_id()).first()
     if address:
-        resultCart = ShoppingCart.query.filter_by(c_id=current_user.get_id()).join(Product).add_columns(Product.product_name, ShoppingCart.quantity)
+        resultCart = ShoppingCart.query.filter_by(c_id=current_user.get_id()).join(Product).add_columns(Product.product_id, Product.product_name, ShoppingCart.quantity)
         resultaddress = Shipping_Address.query.filter_by(customer_id=current_user.get_id())
+        first_state = (resultaddress.first()).state #getting first address's state to populate our price column
+
+        prices = []
+        for results in resultCart:
+            quantity = results.quantity
+            prod_id = results.product_id
+            Cost_per_item = ((Cost.query.filter_by(product_id = prod_id, state=first_state)).first()).price
+            itemprice = Cost_per_item * quantity
+            prices.append(itemprice)
+        totalprice  = 0 
+        for price in prices:
+            totalprice += price
+        zipped_data = zip(resultCart, prices) #this creates an object with 2 values, to use in our table
         
-        return render_template('checkout.html', Cart = resultCart, addresslist = resultaddress, title = 'Checkout', form=form)
+        if form.validate_on_submit(): #this method currently does not work 
+            db.session.delete(resultCart)
+            db.session.commit()
+            flash(f'Checkout Succesful!', 'success')
+            creditcard = (CreditCard.query.filter_by(c_id=current_user.get_id())).first()
+            order = Order(subtotal = totalprice, card_number=creditcard.cardnumber,)
+            db.session.add(order)
+            db.session.commit()
+            return redirect(url_for('home'))
+        return render_template('checkout.html', Cart = zipped_data, addresslist = resultaddress, Prices = prices, total = totalprice, title = 'Checkout', form=form)
+    
     else:
         flash(f'No shipping Address found. Please Add one!', 'danger')
         return redirect(url_for('home'))

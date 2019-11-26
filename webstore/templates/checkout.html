@@ -2,30 +2,36 @@
 
 {% block content %}
 
+<form method="POST" action="">
   <h1>Shopping Cart Items</h1>
   <table class="table table-bordered w-100">
   <thead>
   <tr class="table-primary"><th>Name</th><th>Quantity</th><th>Price</th></tr>
   <thead>
-  {% for item in Cart %}
+  {% for item, price in Cart %}
+  
     <tr id="item.product_id">
       <td>{{ item.product_name }}</td>
       <td>{{ item.quantity }}</td>
+      <td>${{ price }}</td>
 	</tr>
   {% endfor %}
-  {% for price in prices %}
-    
-  {% endfor%}
   </table>
+  <h2>Total Price:</h2>
+  <div>
+    <h3>$ {{ total }}
+  </div>
+  
   
   <h1>Select Shipping Address</h1>
-  <select>
+  <select name="address_select" class="selectpicker form-control">
     {% for address in addresslist %}
-    <option value={{ address.state }}>{{ address.street }}, {{ address.state }}</option>
+    <option value="{{ address.state }}">{{ address.street }}, {{ address.state }}</option>
     {% endfor %}
   </select>
   <div class="form-group">
         {{ form.submit(class="btn btn-outline-info") }}
+        {{ form.update(class="btn btn-outline-info") }}
   </div>
-
+</form>
 {% endblock %}

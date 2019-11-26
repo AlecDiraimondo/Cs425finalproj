@@ -49,4 +49,6 @@ class AddressForm(FlaskForm):
     submit = SubmitField('Add Shipping Address') 
 
 class CheckoutForm(FlaskForm):
+    
+    update = SubmitField('Calculate Price')
     submit = SubmitField('Checkout')
