@@ -71,7 +71,7 @@ class Shipping_Address(db.Model):
     state = db.Column(db.String(20), primary_key=True)
     street = db.Column(db.String(40), primary_key=True)
     city = db.Column(db.String(20), nullable=False)
-    order_id = db.Column(db.Integer)
+    customer_id = db.Column(db.Integer, db.ForeignKey('Customer.c_id'))
     
 class Cost(db.Model):
     __tablename__ = 'Cost'

@@ -1,7 +1,7 @@
 from flask import render_template, url_for, flash, redirect, request
 from webstore import app, db
-from webstore.forms import RegistrationForm, CustomerLoginForm, CreditCardForm
-from webstore.models import Customer, Product, Food, Alcohol, Warehouse, CreditCard, ShoppingCart
+from webstore.forms import RegistrationForm, CustomerLoginForm, CreditCardForm, AddressForm, CheckoutForm
+from webstore.models import Customer, Product, Food, Alcohol, Warehouse, CreditCard, ShoppingCart, Shipping_Address
 from flask_login import login_user, current_user, logout_user
 
 
@@ -80,3 +80,28 @@ def add_to_cart():
         flash(f'Product Added to cart', 'success')
         return redirect(url_for('shop'))
     return redirect(url_for('shop'))
+
+@app.route("/addadress", methods=['GET', 'POST'])
+def add_address():
+    form = AddressForm()
+    if form.validate_on_submit():
+        address = Shipping_Address(zipcode = form.zipcode.data, state = form.state.data, street = form.street.data,
+                                  city = form.city.data, customer_id = (current_user.get_id()))
+        db.session.add(address)
+        db.session.commit()
+        flash(f'Shipping Address Added!', 'success')
+        return redirect(url_for('checkout'))
+    return render_template('address.html', title = 'Add Address', form=form)
+
+@app.route("/Checkout", methods=['GET', 'POST'])
+def checkout():
+    form = CheckoutForm()
+    address = Shipping_Address.query.filter_by(customer_id=current_user.get_id()).first()
+    if address:
+        resultCart = ShoppingCart.query.filter_by(c_id=current_user.get_id()).join(Product).add_columns(Product.product_name, ShoppingCart.quantity)
+        resultaddress = Shipping_Address.query.filter_by(customer_id=current_user.get_id())
+        
+        return render_template('checkout.html', Cart = resultCart, addresslist = resultaddress, title = 'Checkout', form=form)
+    else:
+        flash(f'No shipping Address found. Please Add one!', 'danger')
+        return redirect(url_for('home'))

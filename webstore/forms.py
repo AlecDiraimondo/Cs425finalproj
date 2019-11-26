@@ -39,4 +39,14 @@ class CreditCardForm(FlaskForm):
     city = StringField('City', validators=[DataRequired(),Length(min=2,max=20)])
     street = StringField('Street', validators=[DataRequired(), Length(min=2,max=20)])
     submit = SubmitField('Add Card')
-    
+
+class AddressForm(FlaskForm):
+
+    state = StringField('State', validators=[DataRequired(), Length(min=2,max=4)])
+    zipcode = IntegerField('Zip Code', validators=[DataRequired()])
+    city = StringField('City', validators=[DataRequired(),Length(min=2,max=20)])
+    street = StringField('Street', validators=[DataRequired(), Length(min=2,max=20)])
+    submit = SubmitField('Add Shipping Address') 
+
+class CheckoutForm(FlaskForm):
+    submit = SubmitField('Checkout')

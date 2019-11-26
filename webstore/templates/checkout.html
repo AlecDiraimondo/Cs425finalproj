@@ -1,0 +1,31 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+  <h1>Shopping Cart Items</h1>
+  <table class="table table-bordered w-100">
+  <thead>
+  <tr class="table-primary"><th>Name</th><th>Quantity</th><th>Price</th></tr>
+  <thead>
+  {% for item in Cart %}
+    <tr id="item.product_id">
+      <td>{{ item.product_name }}</td>
+      <td>{{ item.quantity }}</td>
+	</tr>
+  {% endfor %}
+  {% for price in prices %}
+    
+  {% endfor%}
+  </table>
+  
+  <h1>Select Shipping Address</h1>
+  <select>
+    {% for address in addresslist %}
+    <option value={{ address.state }}>{{ address.street }}</option>
+    {% endfor %}
+  </select>
+  <div class="form-group">
+        {{ form.submit(class="btn btn-outline-info") }}
+  </div>
+
+{% endblock %}
