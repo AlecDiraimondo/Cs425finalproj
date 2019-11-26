@@ -40,7 +40,7 @@ values ('beers', '5', (SELECT product_id FROM public."Product" WHERE product_nam
 ('liquor', '50', (SELECT product_id FROM public."Product" WHERE product_name='vodka'));
 
 /*cost table*/
-insert into cost("product_id", "state", "price")
+insert into public."Cost"("product_id", "state", "price")
 values (1, 'CA', 10),
 (1, 'IL', 8),
 (1, 'FL', 6),
@@ -85,7 +85,7 @@ values (1, 'CA', 10),
 (7, 'NM', 10);
 
 /*stock table*/
-insert into stock("warehouse_id", "quantity", "product_id")
+insert into public."Stock"("warehouse_id", "quantity", "product_id")
 values(1, 7100, 1),
 (1, 6100, 2),
 (1, 2100, 3),
@@ -109,14 +109,14 @@ values(1, 7100, 1),
 (3, 900, 7);
 
 /*warehouse table*/ 
-insert into warehouse("warehouse_id", "street", "zip", "state", "capacity", "city")
+insert into public."Warehouse"("warehouse_id", "street", "zip", "state", "capacity", "city")
 values (default, '2100 Rodeo Dr', 94002, 'CA', 80000, 'Los Angeles'),
 (default, '400 Madison Ave', 60615, 'IL', 100000, 'Chicago'),
 (default, '4210 S Walnut St', 15001, 'PA', 75000, 'Philadelphia');
 
 
 /*staff table*/
-insert into staff("first_name", "last_name", "job_title", "s_username", "password", "salary", "state", "street", "zip", "city")
+insert into public."Staff"("first_name", "last_name", "job_title", "s_username", "password", "salary", "state", "street", "zip", "city")
 values ('Stewart', 'Maggie', 'Manager', 'mstewart', 'stewartmanage1', 80000, 'CA', '127 Patrick Blvd', 94002, 'Los Angeles'),
 ('Pulliam', 'John', 'Worker', 'jpulliam', 'pulliamworker1', 50000, 'CA', '240 Miami St', 94002, 'Los Angeles'),
 ('Rodriguez', 'Calvin', 'Manager', 'crodriguez', 'rodriguezmanage2', 70000, 'IL', '100 Wabash Ave', 60616, 'Chicago'),

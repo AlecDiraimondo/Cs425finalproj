@@ -1,7 +1,7 @@
-from flask import render_template, url_for, flash, redirect
+from flask import render_template, url_for, flash, redirect, request
 from webstore import app, db
 from webstore.forms import RegistrationForm, CustomerLoginForm, CreditCardForm
-from webstore.models import Customer, Product, Food, Alcohol, Warehouse, CreditCard
+from webstore.models import Customer, Product, Food, Alcohol, Warehouse, CreditCard, ShoppingCart
 from flask_login import login_user, current_user, logout_user
 
 
@@ -13,10 +13,9 @@ def home():
 
 @app.route('/shop')  #new route, new function -> Allows us to have multiple pages easily.
 def shop():
-    resultFood=Product.query.join(Food, Product.product_id==Food.product_id).add_columns(Product.product_name, Food.calories, Product.size)
-    resultAlcohol=Product.query.join(Alcohol, Product.product_id==Alcohol.product_id).add_columns(Product.product_name, Alcohol.alcohol_content, Product.size)
-    return render_template('shop.html', productsFood=resultFood, productsAlcohol=resultAlcohol, title='Products')
-
+    resultFood=Product.query.join(Food, Product.product_id==Food.product_id).add_columns(Product.product_id,Product.product_name, Food.calories, Product.size)
+    resultAlcohol=Product.query.join(Alcohol, Product.product_id==Alcohol.product_id).add_columns(Product.product_id,Product.product_name, Alcohol.alcohol_content, Product.size)
+    return render_template('shop.html', productsFood=resultFood, productsAlcohol=resultAlcohol)
 @app.route('/warehouse') #creates warehouse page
 def warehouse():
     result=Warehouse.query.all()
@@ -70,3 +69,14 @@ def account():
         return redirect(url_for('shop'))
     return render_template('account.html', title='Account', form=form)
 
+@app.route("/add", methods=['POST'])
+def add_to_cart():
+    quant = int(request.form['quantity'])
+    prod_id = request.form['id']
+    if request.method == 'POST':
+        product = ShoppingCart(c_id = (current_user.get_id()), product_id = prod_id, quantity = quant)
+        db.session.add(product)
+        db.session.commit()
+        flash(f'Product Added to cart', 'success')
+        return redirect(url_for('shop'))
+    return redirect(url_for('shop'))

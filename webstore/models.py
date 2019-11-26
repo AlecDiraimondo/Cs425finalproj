@@ -76,7 +76,7 @@ class Shipping_Address(db.Model):
 class Cost(db.Model):
     __tablename__ = 'Cost'
     product_id = db.Column(db.Integer, db.ForeignKey('Product.product_id'), primary_key=True)
-    state = db.Column(db.String(20), nullable=False)
+    state = db.Column(db.String(20), nullable=False, primary_key=True)
     price = db.Column(db.Numeric(8,2))
 
 class Staff(db.Model):
