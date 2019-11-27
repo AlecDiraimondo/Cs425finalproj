@@ -114,17 +114,34 @@ def checkout():
             totalprice += price
         zipped_data = zip(resultCart, prices) #this creates an object with 2 values, to use in our table
         
-        if form.validate_on_submit(): #this method currently does not work 
-            db.session.delete(resultCart)
-            db.session.commit()
-            flash(f'Checkout Succesful!', 'success')
-            creditcard = (CreditCard.query.filter_by(c_id=current_user.get_id())).first()
-            order = Order(subtotal = totalprice, card_number=creditcard.cardnumber,)
-            db.session.add(order)
-            db.session.commit()
-            return redirect(url_for('home'))
+        if request.method == 'POST':
+            print('helloworld')
+            if request.form['submit_button']:
+                ShoppingCart.query.filter_by(c_id=current_user.get_id()).delete()
+                db.session.commit()
+                flash(f'Checkout Succesful, your order has been placed! Redirecting to home..', 'success')
+                creditcard = (CreditCard.query.filter_by(c_id=current_user.get_id())).first()
+                order = Order(subtotal = totalprice, card_number=creditcard.cardnumber)
+                db.session.add(order)
+                db.session.commit()
+                return redirect(url_for('home'))
+            elif request.form['select_address']:
+                select_state =  str(request.form.get("Address"))
+                newprices = []
+                for results in resultCart:
+                    quantity = results.quantity
+                    prod_id = results.product_id
+                    Cost_per_item = ((Cost.query.filter_by(product_id = prod_id, state=select_state))).one().price
+                    itemprice = Cost_per_item * quantity
+                    newprices.append(itemprice)
+                newtotalprice  = 0 
+                for price in newprices:
+                    newtotalprice += price
+                new_zipped_data = zip(resultCart, prices)
+                return render_template('checkout.html', Cart = new_zipped_data, addresslist = resultaddress, Prices = newprices, total = newtotalprice, title = 'Checkout', form=form)
+            else:
+                return render_template('checkout.html', Cart = zipped_data, addresslist = resultaddress, Prices = prices, total = totalprice, title = 'Checkout', form=form)
         return render_template('checkout.html', Cart = zipped_data, addresslist = resultaddress, Prices = prices, total = totalprice, title = 'Checkout', form=form)
-    
     else:
         flash(f'No shipping Address found. Please Add one!', 'danger')
         return redirect(url_for('home'))

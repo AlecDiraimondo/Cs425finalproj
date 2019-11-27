@@ -48,7 +48,7 @@ class Order(db.Model):
     subtotal = db.Column(db.Numeric(8,2), nullable=False)
     card_number = db.Column(db.String(16), nullable=False)
     time_ordered = db.Column(db.DateTime, nullable = False, default = datetime.utcnow)
-    status = db.Column(db.String(20), nullable = False, default = 'Processed')
+    status = db.Column(db.String(20), nullable = False, default = 'Ordered')
 
 class Warehouse(db.Model):
     __tablename__ = 'Warehouse'

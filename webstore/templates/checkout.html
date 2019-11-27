@@ -24,14 +24,14 @@
   
   
   <h1>Select Shipping Address</h1>
-  <select name="address_select" class="selectpicker form-control">
-    {% for address in addresslist %}
-    <option value="{{ address.state }}">{{ address.street }}, {{ address.state }}</option>
-    {% endfor %}
-  </select>
-  <div class="form-group">
-        {{ form.submit(class="btn btn-outline-info") }}
-        {{ form.update(class="btn btn-outline-info") }}
-  </div>
+  <form id="form1" method="POST">
+    <select id="mySelect" name = "Address">
+        {% for address in addresslist %}
+        <option value="{{ address.state }}">{{ address.street }}, {{ address.state }}</option>
+        {% endfor %}
+    </select>
+    <input type="submit", name="select_address" value="Update Price">
+    <input type="submit" name="submit_button" value="Checkout">  
+   </form>
 </form>
 {% endblock %}

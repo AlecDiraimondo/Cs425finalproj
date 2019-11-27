@@ -1,5 +1,5 @@
 from flask_wtf  import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, IntegerField
+from wtforms import StringField, PasswordField, SubmitField, IntegerField, SelectField
 from wtforms.validators import DataRequired, Length, EqualTo, ValidationError
 from webstore.models import Customer
 
@@ -49,6 +49,6 @@ class AddressForm(FlaskForm):
     submit = SubmitField('Add Shipping Address') 
 
 class CheckoutForm(FlaskForm):
-    
+    a_select = SelectField('Select')
     update = SubmitField('Calculate Price')
     submit = SubmitField('Checkout')

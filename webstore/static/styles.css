@@ -4,6 +4,17 @@ body {
 	color: #211a1a;
 	font-size: 0.9em;
 }
+.site-header .navbar-nav .nav-link {
+    color: #118fd8;
+}
+  
+  .site-header .navbar-nav .nav-link:hover {
+    color: #ffffff;
+}
+  
+  .site-header .navbar-nav .nav-link.active {
+    font-weight: 500;
+}
 
 #shopping-cart {
 	margin: 40px;
