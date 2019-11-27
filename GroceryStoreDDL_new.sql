@@ -1,4 +1,4 @@
-CREATE TABLE "customer"(
+CREATE TABLE "Customer"(
 	"first_name" varchar (20) NOT NULL,
 	"last_name" varchar (20) NOT NULL,
 	"c_id" serial,
@@ -8,7 +8,7 @@ CREATE TABLE "customer"(
 	PRIMARY KEY ("c_id")
 );
 
-CREATE TABLE "creditcard"(
+CREATE TABLE "Creditcard"(
 	"state" varchar(15) NOT NULL,
 	"zip" int not null,
 	"street" varchar(40) NOT NULL,
@@ -17,20 +17,20 @@ CREATE TABLE "creditcard"(
 	"c_id" serial
 );
 
-CREATE TABLE "product"(
+CREATE TABLE "Product"(
 	"product_name" varchar(20),
 	"product_category" varchar(20),
 	"product_id" serial primary key,
 	"size" int check("size" > 0)
 );
 
-CREATE TABLE "shopping_cart"(
+CREATE TABLE "Shopping_cart"(
 	"c_id" serial,
 	"product_id" serial,
 	"quantity" int check ("quantity">=0)
 );
 
-CREATE TABLE "order"(
+CREATE TABLE "Order"(
 	"order_id" serial,
 	"subtotal" numeric(8,2),
 	"card_number" bigint,
@@ -39,14 +39,8 @@ CREATE TABLE "order"(
 	check(status in ('ordered', 'sent', 'received')),
 	PRIMARY KEY("order_id")
 );
-CREATE TABLE "order_details"(
-	"quantity" int check("quantity">0) NOT NULL,
-	"product_id" serial,
-	"order_id" serial,
-	PRIMARY KEY("order_id", "product_id")
-);
 
-CREATE TABLE "warehouse"(
+CREATE TABLE "Warehouse"(
 	"warehouse_id" serial,
 	"street" varchar(30) NOT NULL,	
 	"zip" int NOT NULL,
@@ -56,14 +50,14 @@ CREATE TABLE "warehouse"(
 	PRIMARY KEY("warehouse_id")
 );
 
-CREATE TABLE "stock"(
+CREATE TABLE "Stock"(
 	"warehouse_id" serial,
 	"quantity" int NOT NULL,
 	"product_id" serial,
 	PRIMARY KEY("warehouse_id", "product_id")
 );
 
-CREATE TABLE "shipping_address"(
+CREATE TABLE "Shipping_address"(
 	"order_id" serial,
 	"state" varchar(20) NOT NULL,
 	"street" varchar(40) NOT NULL,
@@ -72,14 +66,14 @@ CREATE TABLE "shipping_address"(
 	PRIMARY KEY("state", "street", "zip")
 );
 
-CREATE TABLE "cost"(
+CREATE TABLE "Cost"(
 	"product_id" serial,
 	"state" varchar(20),
 	"price" numeric(8,2) check(price >=0),
 	PRIMARY KEY("product_id","state")
 );
 
-CREATE TABLE "staff"(
+CREATE TABLE "Staff"(
 	"first_name" varchar(20) NOT NULL,
 	"last_name" varchar(20) NOT NULL,
 	"job_title" varchar(20),
@@ -92,26 +86,24 @@ CREATE TABLE "staff"(
 	"zip" int NOT NULL,
 	PRIMARY KEY("s_username")
 );
-CREATE TABLE "food"(
+CREATE TABLE "Food"(
 	"food_category" varchar(20),
 	"product_id" serial,
 	"calories" int check(calories > 0),
 	PRIMARY KEY("product_id")
 );
 
-CREATE TABLE "alcohol"(
+CREATE TABLE "Alcohol"(
 	"alcohol_category" varchar(20),
 	"alcohol_content" numeric (3,1),
 	"product_id" serial,
 	PRIMARY KEY("product_id")
 );
 
-ALTER TABLE "creditcard" ADD FOREIGN KEY ("c_id") REFERENCES "customer"("c_id"); 
-ALTER TABLE "shopping_cart" ADD FOREIGN KEY ("c_id") REFERENCES "customer"("c_id");
-ALTER TABLE "order" ADD FOREIGN KEY ("card_number") REFERENCES "creditcard"("card_number");
-ALTER TABLE "order_details" ADD FOREIGN KEY ("product_id") REFERENCES "product"("product_id");
-ALTER TABLE "order_details" ADD FOREIGN KEY ("order_id") REFERENCES "order"("order_id");
-ALTER TABLE "stock" ADD FOREIGN KEY ("warehouse_id") REFERENCES "warehouse"("warehouse_id");
-ALTER TABLE "cost" ADD FOREIGN KEY ("product_id") REFERENCES "product"("product_id");
-ALTER TABLE "food" ADD FOREIGN KEY ("product_id") REFERENCES "product"("product_id");
-ALTER TABLE "alcohol" ADD FOREIGN KEY ("product_id") REFERENCES "product"("product_id");
+ALTER TABLE "Creditcard" ADD FOREIGN KEY ("c_id") REFERENCES "Customer"("c_id"); 
+ALTER TABLE "Shopping_cart" ADD FOREIGN KEY ("c_id") REFERENCES "Customer"("c_id");
+ALTER TABLE "Order" ADD FOREIGN KEY ("card_number") REFERENCES "Creditcard"("card_number");
+ALTER TABLE "Stock" ADD FOREIGN KEY ("warehouse_id") REFERENCES "Warehouse"("warehouse_id");
+ALTER TABLE "Cost" ADD FOREIGN KEY ("product_id") REFERENCES "Product"("product_id");
+ALTER TABLE "Food" ADD FOREIGN KEY ("product_id") REFERENCES "Product"("product_id");
+ALTER TABLE "Alcohol" ADD FOREIGN KEY ("product_id") REFERENCES "Product"("product_id");
