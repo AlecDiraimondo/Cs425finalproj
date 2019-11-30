@@ -31,6 +31,13 @@ class CustomerLoginForm(FlaskForm):
 
     submit = SubmitField('Login')
 
+class StaffLoginForm(FlaskForm):
+    username = StringField('Username', 
+                            validators=[DataRequired(), Length(min=2, max=20)])
+    password = PasswordField('Password', validators=[DataRequired()])
+
+    submit = SubmitField('Login')
+
 class CreditCardForm(FlaskForm):
     
     cardnumber = StringField('Credit Card Number', validators=[DataRequired(), Length(min=16,max=16)])

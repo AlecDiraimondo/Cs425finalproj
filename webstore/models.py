@@ -33,6 +33,7 @@ class Product(db.Model):
     product_id = db.Column(db.Integer, primary_key=True)
     product_name= db.Column(db.String(20), nullable = False)
     product_category= db.Column(db.String(20), nullable = False)
+    image = db.Column(db.String(30), nullable = True, default = 'product-images/'+ product_name)
     size = db.Column(db.Integer, nullable= False)
 
 class ShoppingCart(db.Model):

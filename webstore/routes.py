@@ -1,7 +1,7 @@
 from flask import render_template, url_for, flash, redirect, request
 from webstore import app, db
-from webstore.forms import RegistrationForm, CustomerLoginForm, CreditCardForm, AddressForm, CheckoutForm
-from webstore.models import Customer, Product, Food, Alcohol, Warehouse, CreditCard, ShoppingCart, Shipping_Address, Cost, Order
+from webstore.forms import RegistrationForm, CustomerLoginForm, CreditCardForm, AddressForm, CheckoutForm, StaffLoginForm
+from webstore.models import Customer, Product, Food, Alcohol, Warehouse, CreditCard, ShoppingCart, Shipping_Address, Cost, Order, Staff
 from flask_login import login_user, current_user, logout_user
 
 
@@ -13,7 +13,7 @@ def home():
 
 @app.route('/shop')  #new route, new function -> Allows us to have multiple pages easily.
 def shop():
-    resultFood=Product.query.join(Food, Product.product_id==Food.product_id).add_columns(Product.product_id,Product.product_name, Food.calories, Product.size)
+    resultFood=Product.query.join(Food, Product.product_id==Food.product_id).add_columns(Product.product_id,Product.product_name, Food.calories, Product.size, Product.image)
     resultAlcohol=Product.query.join(Alcohol, Product.product_id==Alcohol.product_id).add_columns(Product.product_id,Product.product_name, Alcohol.alcohol_content, Product.size)
     return render_template('shop.html', productsFood=resultFood, productsAlcohol=resultAlcohol)
     
@@ -39,6 +39,22 @@ def customer_login(): #Customer Login page
         return redirect(url_for('home'))
 
     return render_template('customerlogin.html', title='Customer Login',form=form)
+
+@app.route('/stafflogin', methods=['GET', 'POST'])
+def staff_login(): #Staff Login page
+    if current_user.is_authenticated:
+        return redirect(url_for('home'))
+    form = StaffLoginForm()
+    if form.validate_on_submit(): #checking validation of data
+        user = Staff.query.filter_by(s_username=form.username.data).first()
+        if user and (user.password == form.password.data):
+            login_user(user)
+            return redirect(url_for('home'))
+        else:
+            flash(f'Login Unsuccesful: Account credentials invalid', 'danger')
+        return redirect(url_for('home'))
+
+    return render_template('stafflogin.html', title='Staff Login',form=form)
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -103,56 +119,60 @@ def add_address():
 @app.route("/Checkout", methods=['GET', 'POST'])
 def checkout():
     form = CheckoutForm()
-    address = Shipping_Address.query.filter_by(customer_id=current_user.get_id()).first()
-    if address:
-        print ('Have address')
-        resultCart = ShoppingCart.query.filter_by(c_id=current_user.get_id()).join(Product).add_columns(Product.product_id, Product.product_name, ShoppingCart.quantity)
-        resultaddress = Shipping_Address.query.filter_by(customer_id=current_user.get_id())
-        first_state = (resultaddress.first()).state #getting first address's state to populate our price column
+    if current_user.is_authenticated:
+        address = Shipping_Address.query.filter_by(customer_id=current_user.get_id()).first()
+        if address:
+            print ('Have address')
+            resultCart = ShoppingCart.query.filter_by(c_id=current_user.get_id()).join(Product).add_columns(Product.product_id, Product.product_name, ShoppingCart.quantity)
+            resultaddress = Shipping_Address.query.filter_by(customer_id=current_user.get_id())
+            first_state = (resultaddress.first()).state #getting first address's state to populate our price column
 
-        prices = []
-        for results in resultCart:
-            quantity = results.quantity
-            prod_id = results.product_id
-            Cost_per_item = ((Cost.query.filter_by(product_id = prod_id, state=first_state)).first()).price
-            itemprice = Cost_per_item * quantity
-            prices.append(itemprice)
-        totalprice  = 0
-        for price in prices:
-            totalprice += price
-        zipped_data = zip(resultCart, prices) #this creates an object with 2 values, to use in our table
-       
-        if request.method == 'POST':
-            print('helloworld')
-            if 'submit_button' in request.form:
-                ShoppingCart.query.filter_by(c_id=current_user.get_id()).delete()
-                db.session.commit()
-                flash(f'Checkout Succesful, your order has been placed! Redirecting to home..', 'success')
-                creditcard = (CreditCard.query.filter_by(c_id=current_user.get_id())).first()
-                order = Order(subtotal = totalprice, card_number=creditcard.cardnumber)
-                db.session.add(order)
-                db.session.commit()
-                return redirect(url_for('home'))
-            elif 'select_address' in request.form:
-                print ('Updating price')
-                select_state =  str(request.form.get("Address"))
-                print (select_state)
-                newprices = []
-                for results in resultCart:
-                    quantity = results.quantity
-                    prod_id = results.product_id
-                    Cost_per_item = ((Cost.query.filter_by(product_id = prod_id, state=select_state))).one().price
-                    itemprice = Cost_per_item * quantity
-                    newprices.append(itemprice)
-                newtotalprice  = 0
-                for price in newprices:
-                    newtotalprice += price
-                new_zipped_data = zip(resultCart, newprices)
-                return render_template('checkout.html', Cart = new_zipped_data, addresslist = resultaddress, Prices = newprices, total = newtotalprice, title = 'Checkout', form=form)
-            else:
-                return render_template('checkout.html', Cart = zipped_data, addresslist = resultaddress, Prices = prices, total = totalprice, title = 'Checkout', form=form)
-        print('I am here')
-        return render_template('checkout.html', Cart = zipped_data, addresslist = resultaddress, Prices = prices, total = totalprice, title = 'Checkout', form=form)
+            prices = []
+            for results in resultCart:
+                quantity = results.quantity
+                prod_id = results.product_id
+                Cost_per_item = ((Cost.query.filter_by(product_id = prod_id, state=first_state)).first()).price
+                itemprice = Cost_per_item * quantity
+                prices.append(itemprice)
+            totalprice  = 0
+            for price in prices:
+                totalprice += price
+            zipped_data = zip(resultCart, prices) #this creates an object with 2 values, to use in our table
+        
+            if request.method == 'POST':
+                print('helloworld')
+                if 'submit_button' in request.form:
+                    ShoppingCart.query.filter_by(c_id=current_user.get_id()).delete()
+                    db.session.commit()
+                    flash(f'Checkout Succesful, your order has been placed! Redirecting to home..', 'success')
+                    creditcard = (CreditCard.query.filter_by(c_id=current_user.get_id())).first()
+                    order = Order(subtotal = totalprice, card_number=creditcard.cardnumber)
+                    db.session.add(order)
+                    db.session.commit()
+                    return redirect(url_for('home'))
+                elif 'select_address' in request.form:
+                    print ('Updating price')
+                    select_state =  str(request.form.get("Address"))
+                    print (select_state)
+                    newprices = []
+                    for results in resultCart:
+                        quantity = results.quantity
+                        prod_id = results.product_id
+                        Cost_per_item = ((Cost.query.filter_by(product_id = prod_id, state=select_state))).one().price
+                        itemprice = Cost_per_item * quantity
+                        newprices.append(itemprice)
+                    totalprice = 0
+                    for price in newprices:
+                        totalprice += price
+                    new_zipped_data = zip(resultCart, newprices)
+                    return render_template('checkout.html', Cart = new_zipped_data, addresslist = resultaddress, Prices = newprices, total = totalprice, title = 'Checkout', form=form)
+                else:
+                    return render_template('checkout.html', Cart = zipped_data, addresslist = resultaddress, Prices = prices, total = totalprice, title = 'Checkout', form=form)
+            print('I am here')
+            return render_template('checkout.html', Cart = zipped_data, addresslist = resultaddress, Prices = prices, total = totalprice, title = 'Checkout', form=form)
+        else:
+            flash(f'No shipping Address found. Please Add one!', 'danger')
+            return redirect(url_for('home'))
     else:
-        flash(f'No shipping Address found. Please Add one!', 'danger')
+        flash(f"No user logged in. Please Log in to Checkout!", 'danger')
         return redirect(url_for('home'))

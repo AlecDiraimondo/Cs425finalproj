@@ -59,7 +59,8 @@
 		{% for product in productsFood %}
 
 			<div class="product-item">
-				<form method="post" action="/add">
+        <form method="post" action="/add">
+          <div class="product-image"><img src="/static/images/{{ product.image }}"></div>
 					<div class="product-tile-footer">
             <div class="product-title">
               {{ product.product_name }}
@@ -81,7 +82,8 @@
     {% for product in productsAlcohol %}
 
 			<div class="product-item">
-				<form method="post" action="/add">
+        <form method="post" action="/add">
+          <div class="product-image"><img src="/static/images/{{ product.image }}"></div>
 					<div class="product-tile-footer">
             <div class="product-title">
               {{ product.product_name }}

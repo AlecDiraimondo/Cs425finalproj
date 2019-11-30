@@ -17,14 +17,14 @@ VALUES ('CA', '90001', 'Oxnard Dr', '4556418275026205', (SELECT c_id FROM public
 ('FL', '32003', 'Palm Dr', '4916203781250266', (SELECT c_id FROM public."Customer" WHERE c_username='mpereira'),'Miami');
 
 /*product table*/
-INSERT INTO public."Product" ("product_name", "product_category", "product_id", "size")
-VALUES('apples', 'food', default, 1),
-('bananas', 'food', default, 1),
-('rice', 'food', default, 2),
-('bread', 'food', default, 0.5),
-('beer','alcohol',default, 1),
-('wine', 'alcohol', default, 1),
-('vodka', 'alcohol', default, 1);
+INSERT INTO public."Product" ("product_name", "product_category", "product_id", "size", "image")
+VALUES('apples', 'food', default, 1, 'product-images/apple.jpeg' ),
+('bananas', 'food', default, 1, 'product-images/bananas.jpeg'),
+('rice', 'food', default, 2, 'product-images/rice.jpeg'),
+('bread', 'food', default, 0.5, 'product-images/bread.jpeg'),
+('beer','alcohol',default, 1, 'product-images/beer.jpeg'),
+('wine', 'alcohol', default, 1, 'product-images/wine.jpeg'),
+('vodka', 'alcohol', default, 1, 'product-images/vodka.jpeg');
 
 /*food table*/
 INSERT INTO public."Food" ("food_category", "product_id", "calories")
