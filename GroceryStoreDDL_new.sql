@@ -100,6 +100,7 @@ CREATE TABLE "Alcohol"(
 	PRIMARY KEY("product_id")
 );
 
+ALTER TABLE "Shipping_address" ADD FOREIGN KEY ("order_id") REFERENCES "Order" ("order_id");
 ALTER TABLE "Creditcard" ADD FOREIGN KEY ("c_id") REFERENCES "Customer"("c_id"); 
 ALTER TABLE "Shopping_cart" ADD FOREIGN KEY ("c_id") REFERENCES "Customer"("c_id");
 ALTER TABLE "Order" ADD FOREIGN KEY ("card_number") REFERENCES "Creditcard"("card_number");

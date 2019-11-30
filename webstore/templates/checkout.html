@@ -30,8 +30,10 @@
         <option value="{{ address.state }}">{{ address.street }}, {{ address.state }}</option>
         {% endfor %}
     </select>
-    <input type="submit", name="select_address" value="Update Price">
-    <input type="submit" name="submit_button" value="Checkout">  
+	<div class="shipping-action">
+    <input type="submit" name="select_address" value="Update Price"/>
+    <input type="submit" name="submit_button" value="Checkout"/>
+	</div>
    </form>
 </form>
 {% endblock %}
