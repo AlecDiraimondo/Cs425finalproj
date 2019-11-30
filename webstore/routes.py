@@ -16,6 +16,9 @@ def shop():
     resultFood=Product.query.join(Food, Product.product_id==Food.product_id).add_columns(Product.product_id,Product.product_name, Food.calories, Product.size)
     resultAlcohol=Product.query.join(Alcohol, Product.product_id==Alcohol.product_id).add_columns(Product.product_id,Product.product_name, Alcohol.alcohol_content, Product.size)
     return render_template('shop.html', productsFood=resultFood, productsAlcohol=resultAlcohol)
+    
+
+    
 @app.route('/warehouse') #creates warehouse page
 def warehouse():
     result=Warehouse.query.all()
@@ -74,8 +77,12 @@ def add_to_cart():
     quant = int(request.form['quantity'])
     prod_id = request.form['id']
     if request.method == 'POST':
-        product = ShoppingCart(c_id = (current_user.get_id()), product_id = prod_id, quantity = quant)
-        db.session.add(product)
+        exists = ShoppingCart.query.join(Product).filter(ShoppingCart.c_id==current_user.get_id(), Product.product_id==prod_id).first()
+        if(exists):
+            exists.quantity+=quant
+        else:
+            product = ShoppingCart(c_id = (current_user.get_id()), product_id = prod_id, quantity = quant)
+            db.session.add(product)
         db.session.commit()
         flash(f'Product Added to cart', 'success')
         return redirect(url_for('shop'))
@@ -98,6 +105,7 @@ def checkout():
     form = CheckoutForm()
     address = Shipping_Address.query.filter_by(customer_id=current_user.get_id()).first()
     if address:
+        print ('Have address')
         resultCart = ShoppingCart.query.filter_by(c_id=current_user.get_id()).join(Product).add_columns(Product.product_id, Product.product_name, ShoppingCart.quantity)
         resultaddress = Shipping_Address.query.filter_by(customer_id=current_user.get_id())
         first_state = (resultaddress.first()).state #getting first address's state to populate our price column
@@ -109,14 +117,14 @@ def checkout():
             Cost_per_item = ((Cost.query.filter_by(product_id = prod_id, state=first_state)).first()).price
             itemprice = Cost_per_item * quantity
             prices.append(itemprice)
-        totalprice  = 0 
+        totalprice  = 0
         for price in prices:
             totalprice += price
         zipped_data = zip(resultCart, prices) #this creates an object with 2 values, to use in our table
-        
+       
         if request.method == 'POST':
             print('helloworld')
-            if request.form['submit_button']:
+            if 'submit_button' in request.form:
                 ShoppingCart.query.filter_by(c_id=current_user.get_id()).delete()
                 db.session.commit()
                 flash(f'Checkout Succesful, your order has been placed! Redirecting to home..', 'success')
@@ -125,8 +133,10 @@ def checkout():
                 db.session.add(order)
                 db.session.commit()
                 return redirect(url_for('home'))
-            elif request.form['select_address']:
+            elif 'select_address' in request.form:
+                print ('Updating price')
                 select_state =  str(request.form.get("Address"))
+                print (select_state)
                 newprices = []
                 for results in resultCart:
                     quantity = results.quantity
@@ -134,13 +144,14 @@ def checkout():
                     Cost_per_item = ((Cost.query.filter_by(product_id = prod_id, state=select_state))).one().price
                     itemprice = Cost_per_item * quantity
                     newprices.append(itemprice)
-                newtotalprice  = 0 
+                newtotalprice  = 0
                 for price in newprices:
                     newtotalprice += price
-                new_zipped_data = zip(resultCart, prices)
+                new_zipped_data = zip(resultCart, newprices)
                 return render_template('checkout.html', Cart = new_zipped_data, addresslist = resultaddress, Prices = newprices, total = newtotalprice, title = 'Checkout', form=form)
             else:
                 return render_template('checkout.html', Cart = zipped_data, addresslist = resultaddress, Prices = prices, total = totalprice, title = 'Checkout', form=form)
+        print('I am here')
         return render_template('checkout.html', Cart = zipped_data, addresslist = resultaddress, Prices = prices, total = totalprice, title = 'Checkout', form=form)
     else:
         flash(f'No shipping Address found. Please Add one!', 'danger')
