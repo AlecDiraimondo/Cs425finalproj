@@ -36,6 +36,7 @@
               {% if current_user.is_authenticated %}
                 <a class="nav-item nav-link" href="{{ url_for('account') }}">Edit Account</a> 
                 <a class="nav-item nav-link" href="{{ url_for('logout') }}">Logout</a>
+				<a class="nav-item nav-link" href="{{ url_for('add_address') }}">Add Address</a>
               {% else %}
                 <a class="nav-item nav-link" href="{{ url_for('customer_login') }}">Login</a>
                 <a class="nav-item nav-link" href="{{ url_for('register') }}">Register</a>
