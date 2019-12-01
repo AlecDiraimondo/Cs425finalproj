@@ -1,4 +1,5 @@
 from flask import render_template, url_for, flash, redirect, request
+from sqlalchemy.sql import func
 from webstore import app, db
 from webstore.forms import RegistrationForm, CustomerLoginForm, CreditCardForm, AddressForm, CheckoutForm, AccountForm, ProductForm, StockForm
 from webstore.models import Customer, Product, Food, Alcohol, Warehouse, CreditCard, ShoppingCart, Shipping_Address, Cost, Order, Staff, Stock, Food, Alcohol
@@ -23,10 +24,9 @@ def shop():
     
 @app.route('/warehouse', methods=['GET', 'POST']) #creates warehouse page
 def warehouse():
-    result=Warehouse.query.all()
-    result=Staff.query.all()
-    return render_template('warehouse.html', warehouseData=result, staffData=result, title='Warehouse')
-
+    result=db.session.query(Warehouse.warehouse_id, Warehouse.city, Warehouse.street, Warehouse.zipcode, Warehouse.state, Warehouse.capacity, func.sum(Stock.quantity)).join(Stock, Warehouse.warehouse_id==Stock.warehouse_id).group_by(Warehouse.warehouse_id).all()
+    print(result)
+    return render_template('warehouse.html', warehouseData=result, title='Warehouse')
  
 @app.route('/products', methods=['GET', 'POST']) #creates products page
 def products():

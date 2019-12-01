@@ -9,7 +9,7 @@
 		{% for product in productsFood %}
 
 			<div class="product-item">
-				<img src="images/{{product.product_name}}.jpg" width="150px">
+				<img src="{{ url_for('static', filename=product.product_name) }}.jpg" width="150px">
 				<form method="post" action="/add">
 					<div class="product-tile-footer">
             <div class="product-title">
@@ -32,7 +32,7 @@
     {% for product in productsAlcohol %}
 
 			<div class="product-item">
-				<img src="images/{{product.product_name}}.jpg" width="150px">
+				<img src="{{ url_for('static', filename=product.product_name)}}.jpg" width="150px">
 				<form method="post" action="/add">
 					<div class="product-tile-footer">
             <div class="product-title">
