@@ -17,14 +17,14 @@ VALUES ('CA', '90001', 'Oxnard Dr', '4556418275026205', (SELECT c_id FROM public
 ('FL', '32003', 'Palm Dr', '4916203781250266', (SELECT c_id FROM public."Customer" WHERE c_username='mpereira'),'Miami');
 
 /*product table*/
-INSERT INTO public."Product" ("product_name", "product_category", "product_id", "size", "image")
-VALUES('apples', 'food', default, 1, 'product-images/apple.jpeg' ),
-('bananas', 'food', default, 1, 'product-images/bananas.jpeg'),
-('rice', 'food', default, 2, 'product-images/rice.jpeg'),
-('bread', 'food', default, 0.5, 'product-images/bread.jpeg'),
-('beer','alcohol',default, 1, 'product-images/beer.jpeg'),
-('wine', 'alcohol', default, 1, 'product-images/wine.jpeg'),
-('vodka', 'alcohol', default, 1, 'product-images/vodka.jpeg');
+INSERT INTO public."Product" ("product_name", "product_category", "product_id", "size")
+VALUES('apples', 'food', default, 1),
+('bananas', 'food', default, 1),
+('rice', 'food', default, 2),
+('bread', 'food', default, 0.5),
+('beer','alcohol',default, 1),
+('wine', 'alcohol', default, 1),
+('vodka', 'alcohol', default, 1);
 
 /*food table*/
 INSERT INTO public."Food" ("food_category", "product_id", "calories")
@@ -85,6 +85,13 @@ values ((SELECT product_id FROM public."Product" WHERE product_name='apples'), '
 ((SELECT product_id FROM public."Product" WHERE product_name='vodka'), 'NM', 10);
 
 
+/*warehouse table*/ 
+insert into public."Warehouse"("warehouse_id", "street", "zipcode", "state", "capacity", "city")
+values (default, '2100 Rodeo Dr', 94002, 'CA', 80000, 'Los Angeles'),
+(default, '400 Madison Ave', 60615, 'IL', 100000, 'Chicago'),
+(default, '4210 S Walnut St', 15001, 'PA', 75000, 'Philadelphia');
+
+
 /*stock table*/
 insert into public."Stock"("warehouse_id", "quantity", "product_id")
 values
@@ -110,21 +117,14 @@ values
 ((SELECT warehouse_id FROM public."Warehouse" WHERE zipcode=15001), 1200, (SELECT product_id FROM public."Product" WHERE product_name='wine')),
 ((SELECT warehouse_id FROM public."Warehouse" WHERE zipcode=15001), 900,  (SELECT product_id FROM public."Product" WHERE product_name='vodka'));
 
-/*warehouse table*/ 
-insert into public."Warehouse"("warehouse_id", "street", "zipcode", "state", "capacity", "city")
-values (default, '2100 Rodeo Dr', 94002, 'CA', 80000, 'Los Angeles'),
-(default, '400 Madison Ave', 60615, 'IL', 100000, 'Chicago'),
-(default, '4210 S Walnut St', 15001, 'PA', 75000, 'Philadelphia');
-
-
 /*staff table*/
-insert into public."Staff"("first_name", "last_name", "job_title", "s_username", "password", "salary", "state", "street", "zip", "city")
-values ('Stewart', 'Maggie', 'Manager', 'mstewart', 'stewartmanage1', 80000, 'CA', '127 Patrick Blvd', 94002, 'Los Angeles'),
-('Pulliam', 'John', 'Worker', 'jpulliam', 'pulliamworker1', 50000, 'CA', '240 Miami St', 94002, 'Los Angeles'),
-('Rodriguez', 'Calvin', 'Manager', 'crodriguez', 'rodriguezmanage2', 70000, 'IL', '100 Wabash Ave', 60616, 'Chicago'),
-('Madison', 'Katie', 'Worker', 'kmadison', 'madisonworker2', 45000, 'IL', '2100 State St', 60616, 'Chicago'),
-('Rajesh', 'Daniel', 'Manager', 'drajesh', 'rajeshmanage3', 75000, 'PA', '2240 S Walnut St', 19109, 'Philadelphia'),
-('Jackson', 'Melissa', 'Worker', 'mjackson', 'jacksonworker3', 55000, 'PA', '150 Center Dr', 19109, 'Philadelphia');
+insert into public."Staff" ("s_id","first_name", "last_name", "job_title", "s_username", "password", "salary", "state", "street", "zipcode", "city")
+values (1000,'Stewart', 'Maggie', 'Manager', 'mstewart', 'stewartmanage1', 80000, 'CA', '127 Patrick Blvd', 94002, 'Los Angeles'),
+(1001,'Pulliam', 'John', 'Worker', 'jpulliam', 'pulliamworker1', 50000, 'CA', '240 Miami St', 94002, 'Los Angeles'),
+(1002,'Rodriguez', 'Calvin', 'Manager', 'crodriguez', 'rodriguezmanage2', 70000, 'IL', '100 Wabash Ave', 60616, 'Chicago'),
+(1003,'Madison', 'Katie', 'Worker', 'kmadison', 'madisonworker2', 45000, 'IL', '2100 State St', 60616, 'Chicago'),
+(1004,'Rajesh', 'Daniel', 'Manager', 'drajesh', 'rajeshmanage3', 75000, 'PA', '2240 S Walnut St', 19109, 'Philadelphia'),
+(1005,'Jackson', 'Melissa', 'Worker', 'mjackson', 'jacksonworker3', 55000, 'PA', '150 Center Dr', 19109, 'Philadelphia');
 
 
 

@@ -4,7 +4,7 @@
         <form method="POST" action="">
             {{ form.hidden_tag() }}
             <fieldset class="form-group">
-                <legend class="border-bottom mb-4">Staff Login (NO accounts can be created)</legend>
+                <legend class="border-bottom mb-4">Staff Login</legend>
                 <div class="form-group">
                     {{ form.username.label(class="form-control-label") }}
 
@@ -39,6 +39,8 @@
         </form>
     </div>
     <div class="border-top pt-3">
-
+        <small class="text-muted">
+            Need to Create Account? Talk to your supervisor.</a>
+        </small>
     </div>
 {% endblock content %}

@@ -1,0 +1,22 @@
+{% extends "layoutstaff.html" %}
+{% block content %}
+<div class="content-section">
+	<h2>Add new product</h2>
+	
+        <form method="POST" action="">
+         {{ form.name.label(class="form-control-label") }}
+		 {{ form.name(class="form-control form-control-lg") }}
+		 
+		 {{ form.category.label(class="form-control-label") }}
+		 {{ form.category(class="form-control form-control-lg") }}
+		
+		 {{ form.extra.label(class="form-control-label") }}
+		 {{ form.extra(class="form-control form-control-lg") }}
+		 
+		 {{ form.size.label(class="form-control-label") }}
+		 {{ form.size(class="form-control form-control-lg") }}
+
+		{{ form.submit(class="btn btn-outline-info my-4") }}
+        </form>
+    </div>
+{% endblock content %}

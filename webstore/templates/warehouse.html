@@ -1,21 +1,41 @@
-{% extends "layout.html" %}
+{% extends "layoutstaff.html" %}
 
 {% block content %}
 
   <h1>Warehouse</h1>
+  <form method="POST" action="">
   <table class="table table-bordered w-100">
   <thead>
-  <tr class="table-primary"><th>Warehouse ID</th><th>Street</th><th>Zipcode</th> <th>State</th><th>Capacity</th><th>City</th>
+  <tr class="table-primary"><th>City</th><th>Street</th><th>Zipcode</th> <th>State</th><th>Capacity</th><th></th>
   <thead>
   {% for warehouse in warehouseData %}
     <tr id="warehouse.warehouse_id">
-      <td>{{ warehouse.warehouse_id }}</td>
+      <td><b>{{ warehouse.city }}</b></td>
       <td>{{ warehouse.street }}</td>
       <td>{{ warehouse.zipcode}}</td>
 	  <td>{{ warehouse.state}}</td>
 	  <td>{{ warehouse.capacity}}</td>
-	  <td>{{ warehouse.city}}</td>
+	  <td><a href="addstock?id={{warehouse.warehouse_id}}">Remove products</a></td> 
 	</tr>
   {% endfor %}
-  </table>
+  </table></form>
+  <h1>Staff Information</h1>
+<table class="table table-bordered w-100">
+  <thead>
+  <tr class="table-primary"><th>Staff ID</th><th>Staff Username</th><th>First Name</th> <th>Last Name</th><th>Job Title</th><th>Street</th><th>City</th><th>Zipcode</th><th>State</th>
+  <thead>
+  {% for staff in staffData %}
+    <tr id="staff.s_id">
+      <td>{{ staff.s_id }}</td>
+      <td>{{ staff.s_username }}</td>
+      <td>{{ staff.first_name}}</td>
+	  <td>{{ staff.last_name}}</td>
+	  <td>{{ staff.job_title}}</td>
+	  <td>{{ staff.street}}</td>
+	  <td>{{ staff.city}}</td>
+	  <td>{{ staff.state}}</td>
+	  <td>{{ staff.zipcode}}</td>
+	</tr>
+	{% endfor %}
+</table>
 {% endblock %}

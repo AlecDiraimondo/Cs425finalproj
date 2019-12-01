@@ -1,85 +1,28 @@
 {% extends "layout.html" %}
 {% block content %}
 <div class="content-section">
+	<h2>Customer: {{ customer }}</h2>
+	
         <form method="POST" action="">
-            {{ form.hidden_tag() }}
-            <fieldset class="form-group">
-                <legend class="border-bottom mb-4">Join Today</legend>
-                <div class="form-group">
-                    {{ form.cardnumber.label(class="form-control-label") }}
-
-                    {% if form.cardnumber.errors %}
-                        {{ form.cardnumber(class="form-control form-control-lg is-invalid") }}
-                        <div class="invalid-feedback">
-                            {% for error in form.cardnumber.errors %}
-                                <span>{{ error }}</span>
-                            {% endfor %}
-                        </div>
-                    {% else %}
-                        {{ form.cardnumber(class="form-control form-control-lg") }}
-                    {% endif %}
-                </div>
-                <div class="form-group">
-                    {{ form.state.label(class="form-control-label") }}
-                    {% if form.state.errors %}
-                        {{ form.state(class="form-control form-control-lg is-invalid") }}
-                        <div class="invalid-feedback">
-                            {% for error in form.state.errors %}
-                                <span>{{ error }}</span>
-                            {% endfor %}
-                        </div>
-                    {% else %}
-                        {{ form.state(class="form-control form-control-lg") }}
-                    {% endif %}
-                </div>
-                <div class="form-group">
-                        {{ form.zipcode.label(class="form-control-label") }}
-                        {% if form.zipcode.errors %}
-                            {{ form.zipcode(class="form-control form-control-lg is-invalid") }}
-                            <div class="invalid-feedback">
-                                {% for error in form.zipcode.errors %}
-                                    <span>{{ error }}</span>
-                                {% endfor %}
-                            </div>
-                        {% else %}
-                            {{ form.zipcode(class="form-control form-control-lg") }}
-                        {% endif %}
-                </div>
-                <div class="form-group">
-                        {{ form.city.label(class="form-control-label") }}
-                        {% if form.city.errors %}
-                            {{ form.city(class="form-control form-control-lg is-invalid") }}
-                            <div class="invalid-feedback">
-                                {% for error in form.city.errors %}
-                                    <span>{{ error }}</span>
-                                {% endfor %}
-                            </div>
-                        {% else %}
-                            {{ form.city(class="form-control form-control-lg") }}
-                        {% endif %}
-                </div>
-                <div class="form-group">
-                        {{ form.street.label(class="form-control-label") }}
-                        {% if form.street.errors %}
-                            {{ form.street(class="form-control form-control-lg is-invalid") }}
-                            <div class="invalid-feedback">
-                                {% for error in form.street.errors %}
-                                    <span>{{ error }}</span>
-                                {% endfor %}
-                            </div>
-                        {% else %}
-                            {{ form.street(class="form-control form-control-lg") }}
-                        {% endif %}
-                </div>
-            </fieldset>
-            <div class="form-group">
-                {{ form.submit(class="btn btn-outline-info") }}
-            </div>
+            <legend class="border-bottom mt-2 mb-4">Credit cards</legend>
+			<select id="myCC" name = "Card" class="form-control form-control-lg mb-2">
+				{% for card in cardlist %}
+				<option value="{{ card.cardnumber }}">Card: {{ card.cardnumber }} - Zip: {{ card.zipcode }}</option>
+				{% endfor %}
+			</select>
+			{{ form.cardadd(class="btn btn-outline-info mb-3") }}
+			{{ form.cardupdate(class="btn btn-outline-info mb-3") }}
+			{{ form.carddelete(class="btn btn-outline-danger mb-3") }}
+	
+	        <legend class="border-bottom mt-2 mb-4">Shipping</legend>
+			<select id="mySelect" name = "Address" class="form-control form-control-lg mb-2">
+				{% for address in addresslist %}
+				<option value="{{ address.address_id }}">{{ address.street }}, {{ address.city }}, {{ address.state }} {{ address.zipcode }}</option>
+				{% endfor %}
+			</select>
+			{{ form.addressadd(class="btn btn-outline-info mb-3") }}
+			{{ form.addressupdate(class="btn btn-outline-info mb-3") }}
+			{{ form.addressdelete(class="btn btn-outline-danger mb-3") }}
         </form>
-    </div>
-    <div class="border-top pt-3">
-        <small class="text-muted">
-            Need to Remove A Card?? <a class="ml-2" href="{{ url_for('register') }}">Click here</a>
-        </small>
     </div>
 {% endblock content %}

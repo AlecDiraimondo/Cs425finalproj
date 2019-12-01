@@ -2,10 +2,27 @@
 {% block content %}
 <div class="content-section">
         <form method="POST" action="">
-		<input type="hidden" name="id" value="{{ fields.address_id }}"/>
             {{ form.hidden_tag() }}
             <fieldset class="form-group">
-                <legend class="border-bottom mb-4">Add shipping address</legend>
+				{% if fields.cardnumber %}
+					<legend class="border-bottom mb-4">Update credit card</legend>
+				{% else %}
+					<legend class="border-bottom mb-4">Add credit card</legend>
+				{% endif %}
+                <div class="form-group">
+                    {{ form.cardnumber.label(class="form-control-label") }}
+
+                    {% if form.cardnumber.errors %}
+                        {{ form.cardnumber(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.cardnumber.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.cardnumber(class="form-control form-control-lg", value=fields.cardnumber) }}
+                    {% endif %}
+                </div>
                 <div class="form-group">
                     {{ form.state.label(class="form-control-label") }}
                     {% if form.state.errors %}
@@ -60,8 +77,9 @@
                 </div>
             </fieldset>
             <div class="form-group">
-                {{ form.submitaddress(class="btn btn-outline-info") }}
+                {{ form.submitcard(class="btn btn-outline-info") }}
             </div>
         </form>
     </div>
+
 {% endblock content %}

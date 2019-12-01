@@ -1,0 +1,33 @@
+{% extends "layoutstaff.html" %}
+
+{% block content %}
+
+  <h1>Products</h1>
+  <a href="addproduct">Add new product</a>
+	
+  <table class="table table-bordered w-100 mt-5">
+  <tr><th colspan="4" class="table-primary text-center">Food products</th></tr>
+  <tr class="table-primary"><th>Product</th><th>Category</th><th>Size</th><th>Calories</th>
+  {% for product in foodData %}
+    <tr>
+      <td><b>{{ product.product_name }}</b></td>
+      <td>{{ product.product_category }}</td>
+      <td>{{ product.size}}</td>
+      <td>{{ product.calories}}</td>
+	</tr>
+  {% endfor %}
+
+  <tr><th colspan="4" class="table-primary text-center">Alcohol products</th></tr>
+  <tr class="table-primary"><th>Product</th><th>Category</th><th>Size</th><th>Alcohol content</th>
+    {% for product in alcoholData %}
+    <tr>
+      <td><b>{{ product.product_name }}</b></td>
+      <td>{{ product.product_category }}</td>
+      <td>{{ product.size}}</td>
+      <td>{{ product.alcohol_content}}</td>
+	</tr>
+  {% endfor %}
+  </table>
+  
+
+{% endblock %}

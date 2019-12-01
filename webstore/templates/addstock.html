@@ -1,0 +1,18 @@
+{% extends "layoutstaff.html" %}
+{% block content %}
+<div class="content-section">
+	<h2>Add stock</h2>
+	
+		Warehouse: <b>{{warehouse.city}} - ID: {{warehouse.warehouse_id}}</b>
+		
+        <form method="POST" action="">
+         {{ form.product.label(class="form-control-label") }}
+		 {{ form.product(class="form-control form-control-lg") }}
+		 
+		 {{ form.quantity.label(class="form-control-label") }}
+		 {{ form.quantity(class="form-control form-control-lg") }}
+		
+		{{ form.submit(class="btn btn-outline-info my-4") }}
+        </form>
+    </div>
+{% endblock content %}

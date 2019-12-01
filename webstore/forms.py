@@ -31,13 +31,6 @@ class CustomerLoginForm(FlaskForm):
 
     submit = SubmitField('Login')
 
-class StaffLoginForm(FlaskForm):
-    username = StringField('Username', 
-                            validators=[DataRequired(), Length(min=2, max=20)])
-    password = PasswordField('Password', validators=[DataRequired()])
-
-    submit = SubmitField('Login')
-
 class CreditCardForm(FlaskForm):
     
     cardnumber = StringField('Credit Card Number', validators=[DataRequired(), Length(min=16,max=16)])
@@ -45,17 +38,38 @@ class CreditCardForm(FlaskForm):
     zipcode = IntegerField('Zip Code', validators=[DataRequired()])
     city = StringField('City', validators=[DataRequired(),Length(min=2,max=20)])
     street = StringField('Street', validators=[DataRequired(), Length(min=2,max=20)])
-    submit = SubmitField('Add Card')
+    submitcard = SubmitField('Add/Update Card')
 
 class AddressForm(FlaskForm):
 
+    id = IntegerField('id')
     state = StringField('State', validators=[DataRequired(), Length(min=2,max=4)])
     zipcode = IntegerField('Zip Code', validators=[DataRequired()])
     city = StringField('City', validators=[DataRequired(),Length(min=2,max=20)])
     street = StringField('Street', validators=[DataRequired(), Length(min=2,max=20)])
-    submit = SubmitField('Add Shipping Address') 
+    submitaddress = SubmitField('Add Shipping Address') 
 
 class CheckoutForm(FlaskForm):
     a_select = SelectField('Select')
     update = SubmitField('Calculate Price')
     submit = SubmitField('Checkout')
+    
+class AccountForm(FlaskForm):
+    cardupdate = SubmitField('Update Card')
+    carddelete = SubmitField('Delete Card')
+    cardadd = SubmitField('Add Card')
+    addressupdate = SubmitField('Update Address')
+    addressdelete = SubmitField('Delete Address')
+    addressadd = SubmitField('Add Address')
+    
+class ProductForm(FlaskForm):
+    name = StringField('Name', validators=[DataRequired(), Length(min=2,max=20)])
+    category = SelectField('Category', choices=[('food', 'Food products'), ('alcohol', 'Alcoholic drinks')])
+    size = IntegerField('Volume', validators=[DataRequired()])
+    extra = StringField('Extra info', validators=[DataRequired()])
+    submit = SubmitField('Add')
+
+class StockForm(FlaskForm):
+    product = SelectField('Product')
+    quantity = IntegerField('Quantity', validators=[DataRequired()])
+    submit = SubmitField('Add')

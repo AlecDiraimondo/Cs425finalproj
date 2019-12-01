@@ -10,7 +10,7 @@ CREATE TABLE "Customer"(
 
 CREATE TABLE "Creditcard"(
 	"state" varchar(15) NOT NULL,
-	"zip" int not null,
+	"zipcode" int not null,
 	"street" varchar(40) NOT NULL,
 	"city" varchar(20),
 	"card_number" bigint primary key,
@@ -43,7 +43,7 @@ CREATE TABLE "Order"(
 CREATE TABLE "Warehouse"(
 	"warehouse_id" serial,
 	"street" varchar(30) NOT NULL,	
-	"zip" int NOT NULL,
+	"zipcode" int NOT NULL,
 	"city" varchar(20),
 	"state" varchar(20) NOT NULL,
 	"capacity" int check(capacity>0),
@@ -58,12 +58,13 @@ CREATE TABLE "Stock"(
 );
 
 CREATE TABLE "Shipping_address"(
+	"address_id" serial,
 	"order_id" serial,
 	"state" varchar(20) NOT NULL,
 	"street" varchar(40) NOT NULL,
 	"city" varchar(20),
-	"zip" int NOT NULL,
-	PRIMARY KEY("state", "street", "zip")
+	"zipcode" int NOT NULL,
+	PRIMARY KEY("address_id")
 );
 
 CREATE TABLE "Cost"(
@@ -74,6 +75,7 @@ CREATE TABLE "Cost"(
 );
 
 CREATE TABLE "Staff"(
+	"s_id" serial,
 	"first_name" varchar(20) NOT NULL,
 	"last_name" varchar(20) NOT NULL,
 	"job_title" varchar(20),
@@ -83,8 +85,8 @@ CREATE TABLE "Staff"(
 	"state" varchar(20) NOT NULL,
 	"street" varchar(20) NOT NULL,
 	"city" varchar(20),
-	"zip" int NOT NULL,
-	PRIMARY KEY("s_username")
+	"zipcode" int NOT NULL,
+	PRIMARY KEY("s_id")
 );
 CREATE TABLE "Food"(
 	"food_category" varchar(20),

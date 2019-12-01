@@ -2,65 +2,15 @@
 
 {% block content %}
 
-<!DOCTYPE html>
-<html>
-<head>
-	<title>CS425 Shopping Page</title>
-  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
-</head>
-<body>
-    <header class="site-header">
-        <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
-          <div class="container">
-            <a class="navbar-brand mr-4" href="/">CS425 Grocery Store</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
-              <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarToggle">
-              <div class="navbar-nav mr-auto">
-			    <a class="nav-item nav-link" href="{{ url_for('home') }}">Home</a>
-			  <a class="nav-item nav-link" href="{{ url_for('shop') }}">Shop</a>
-			    <a class="nav-item nav-link" href="{{ url_for('checkout') }}">Checkout</a>
-			  <a class="nav-item nav-link" href="{{ url_for('warehouse') }}">Warehouse</a>
-              
-              
-              </div>
-              <!-- Navbar Right Side -->
-              <div class="navbar-nav">
-                {% if current_user.is_authenticated %}
-                  <a class="nav-item nav-link" href="{{ url_for('checkout') }}">Checkout!</a>
-                  <a class="nav-item nav-link" href="{{ url_for('account') }}">Edit Account</a> 
-                  <a class="nav-item nav-link" href="{{ url_for('logout') }}">Logout</a>
-
-                {% else %}
-                  <a class="nav-item nav-link" href="{{ url_for('customer_login') }}">Login</a>
-                  <a class="nav-item nav-link" href="{{ url_for('register') }}">Register</a>
-                {% endif %}
-              </div>
-            </div>
-          </div>
-        </nav>
-      </header
-	<div>
-		{% with messages = get_flashed_messages() %}
-		  {% if messages %}
-			<ul class=flashes>
-			{% for message in messages %}
-			  <li>{{ message }}</li>
-			{% endfor %}
-			</ul>
-		  {% endif %}
-		{% endwith %}
-	</div>
-
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
 	<div id="product-grid">
 		<div class="txt-heading">Products</div>
 
 		{% for product in productsFood %}
 
 			<div class="product-item">
-        <form method="post" action="/add">
-          <div class="product-image"><img src="/static/images/{{ product.image }}"></div>
+				<img src="images/{{product.product_name}}.jpg" width="150px">
+				<form method="post" action="/add">
 					<div class="product-tile-footer">
             <div class="product-title">
               {{ product.product_name }}
@@ -82,8 +32,8 @@
     {% for product in productsAlcohol %}
 
 			<div class="product-item">
-        <form method="post" action="/add">
-          <div class="product-image"><img src="/static/images/{{ product.image }}"></div>
+				<img src="images/{{product.product_name}}.jpg" width="150px">
+				<form method="post" action="/add">
 					<div class="product-tile-footer">
             <div class="product-title">
               {{ product.product_name }}

@@ -26,16 +26,13 @@
           </button>
           <div class="collapse navbar-collapse" id="navbarToggle">
             <div class="navbar-nav mr-auto">
-              <a class="nav-item nav-link" href="{{ url_for('home') }}">Home</a>
-            {% if current_user.is_authenticated %}
-              <a class="nav-item nav-link" href="{{ url_for('shop') }}">Shop</a>
-			  <a class="nav-item nav-link" href="{{ url_for('checkout') }}">Checkout</a>
-            {% endif %}
+              <a class="nav-item nav-link" href="{{ url_for('staff') }}">Home</a>
+			  <a class="nav-item nav-link" href="{{ url_for('products') }}">Products</a>
+			  <a class="nav-item nav-link" href="{{ url_for('warehouse') }}">Warehouse</a>
             </div>
             <!-- Navbar Right Side -->
             <div class="navbar-nav">
               {% if current_user.is_authenticated %}
-                <a class="nav-item nav-link" href="{{ url_for('account') }}">Edit Account</a> 
                 <a class="nav-item nav-link" href="{{ url_for('logout') }}">Logout</a>
               {% else %}
                 <a class="nav-item nav-link" href="{{ url_for('customer_login') }}">Customer Login</a>
@@ -49,7 +46,7 @@
     </header>
     <main role="main" class="container">
       <div class="row">
-        <div class="col-md-12">
+        <div class="col-md-8">
           {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
               {% for category, message in messages %}

@@ -2,9 +2,18 @@ from webstore import db, login_manager
 from datetime import datetime
 from flask_login import UserMixin
 
+def isStaff(user_id):
+    if(user_id<1000):
+        return False
+    else:
+        return True
+        
 @login_manager.user_loader
 def load_user(user_id):
-    return Customer.query.get(int(user_id))
+    if(user_id<1000):
+        return Customer.query.get(int(user_id))
+    else:
+        return Staff.query.get(int(user_id))
 
 class Customer(db.Model, UserMixin):
     __tablename__ = 'Customer'
@@ -33,7 +42,6 @@ class Product(db.Model):
     product_id = db.Column(db.Integer, primary_key=True)
     product_name= db.Column(db.String(20), nullable = False)
     product_category= db.Column(db.String(20), nullable = False)
-    image = db.Column(db.String(30), nullable = True, default = 'product-images/'+ product_name)
     size = db.Column(db.Integer, nullable= False)
 
 class ShoppingCart(db.Model):
@@ -62,12 +70,14 @@ class Warehouse(db.Model):
 
 class Stock(db.Model):
     __tablename__ = 'Stock'
-    warehouse_id = db.Column(db.Integer, primary_key=True)
-    product_id = db.Column(db.Integer, db.ForeignKey('Product.product_id'), primary_key=True)
+    stock_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    warehouse_id = db.Column(db.Integer)
+    product_id = db.Column(db.Integer, db.ForeignKey('Product.product_id'))
     quantity = db.Column(db.Integer, nullable=False)
 
 class Shipping_Address(db.Model):
     __tablename__ = 'Shipping_Address'
+    address_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     zipcode = db.Column(db.Integer, primary_key=True)
     state = db.Column(db.String(20), primary_key=True)
     street = db.Column(db.String(40), primary_key=True)
@@ -80,9 +90,10 @@ class Cost(db.Model):
     state = db.Column(db.String(20), nullable=False, primary_key=True)
     price = db.Column(db.Numeric(8,2))
 
-class Staff(db.Model):
+class Staff(db.Model, UserMixin):
     __tablename__ = 'Staff'
-    s_username = db.Column(db.String(20), primary_key=True)
+    s_id = db.Column(db.Integer, primary_key=True)
+    s_username = db.Column(db.String(20))
     first_name = db.Column(db.String(20), nullable=False)
     last_name = db.Column(db.String(20), nullable=False)
     job_title = db.Column(db.String(20), nullable=False)
@@ -92,6 +103,8 @@ class Staff(db.Model):
     street = db.Column(db.String(40), nullable=False)
     city = db.Column(db.String(20), nullable=False)
     zipcode = db.Column(db.Integer, nullable=False)
+    def get_id(self):
+        return (self.s_id)
 
 
 class Food(db.Model):

@@ -3,7 +3,7 @@
 {% block content %}
 
 <form method="POST" action="">
-  <h1>Shopping Cart Items</h1>
+  <h3>Shopping Cart Items</h3>
   <table class="table table-bordered w-100">
   <thead>
   <tr class="table-primary"><th>Name</th><th>Quantity</th><th>Price</th></tr>
@@ -17,23 +17,18 @@
 	</tr>
   {% endfor %}
   </table>
-  <h2>Total Price:</h2>
-  <div>
-    <h3>$ {{ total }}
-  </div>
+  <h4>Total Price: $ {{ total }}</h4>
   
-  
-  <h1>Select Shipping Address</h1>
+  <hr>
+  <h3>Select Shipping Address</h3>
   <form id="form1" method="POST">
-    <select id="mySelect" name = "Address">
+    <select id="mySelect" name = "Address" class="form-control form-control-lg my-3">
         {% for address in addresslist %}
-        <option value="{{ address.state }}">{{ address.street }}, {{ address.state }}</option>
+        <option value="{{ address.state }}">{{ address.street }}, {{ address.city }}, {{ address.state }} {{ address.zipcode }}</option>
         {% endfor %}
     </select>
-	<div class="shipping-action">
-    <input type="submit" name="select_address" value="Update Price"/>
-    <input type="submit" name="submit_button" value="Checkout"/>
-	</div>
+    <input type="submit" name="select_address" value="Update Price" class="btn btn-outline-primary">
+    <input type="submit" name="submit_button" value="Checkout" class="btn btn-outline-success">  
    </form>
 </form>
 {% endblock %}
